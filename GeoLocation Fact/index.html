@@ -1,0 +1,87 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geolocation Fact Checker</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen flex flex-col font-sans text-white">
+    <!-- Search Bar -->
+    <div class="w-full bg-blue-900 p-4 shadow-lg">
+        <div class="max-w-4xl mx-auto flex gap-2">
+            <input id="searchInput" type="text" placeholder="Search for a location..." 
+                   class="w-full p-3 rounded-lg bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <button id="searchBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition">
+                Search
+            </button>
+        </div>
+    </div>
+
+    <!-- Map Container -->
+    <div id="map" class="flex-grow"></div>
+
+    <!-- Information Section -->
+    <div id="info" class="info-container">
+        <h2 class="h22">Location Information</h2>
+        <div id="infoContent" class="pera">
+            <p><strong>Country:</strong> <span id="country">N/A</span></p>
+            <p><strong>City:</strong> <span id="city">N/A</span></p>
+            <p><strong>Area/Region:</strong> <span id="region">N/A</span></p>
+            <p><strong>Population:</strong> <span id="population">N/A</span></p>
+            <p><strong>Currency:</strong> <span id="currency">N/A</span></p>
+            <p><strong>Timezone:</strong> <span id="timezone">N/A</span></p>
+            <p><strong>Zipcode:</strong> <span id="zipcode">N/A</span></p>
+            <div class="flex items-center">
+                <strong>Flag:</strong> <img id="flag" src="" alt="Flag" class="ml-2 h-6 hidden">
+            </div>
+            <p><strong>Coordinates:</strong> <span id="coordinates">N/A</span></p>
+            <p><strong>Interesting Fact:</strong> <span id="fact">N/A</span></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+html, body {
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+#map {
+    height: 50vh; /* Map set to 50vh */
+}
+
+body {
+    background: linear-gradient(to bottom, #8a817c, #ffffff);
+}
+
+#info {
+    height: calc(50vh - 80px); /* Info section takes remaining space minus search bar (~80px) */
+    overflow-y: auto;
+}
+
+.info-container {
+    max-width: 56rem;            
+    margin-left: auto;           
+    margin-right: auto;
+    padding: 1.5rem;             
+    border-radius: 0.5rem;       
+    /* box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+              0 4px 6px -2px rgba(0, 0, 0, 0.05);  */
+    overflow-y: auto;            
+}
+
+.h22 {
+    font-size: 1.5rem;     
+    font-weight: 700;      
+    margin-bottom: 1rem;   
+    color: #000000;
+}
+
+.pera {
+  display: grid;                      /* grid */
+  grid-template-columns: 1fr;         /* grid-cols-1 */
+  gap: 1rem; 
+  color: #000000;                         /* gap-4 = 1rem (16px) */
+}
+
+@media (min-width: 768px) {           /* md: breakpoint = 768px */
+  .pera {
+    grid-template-columns: repeat(2, 1fr);  /* md:grid-cols-2 */
+  }
+}
+
+#fact {
+    font-style: italic;
+    color: #4a4a4a; /* Slightly darker gray for distinction */
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    border-left: 3px solid #8a817c; /* Matches gradient color for consistency */
+}
