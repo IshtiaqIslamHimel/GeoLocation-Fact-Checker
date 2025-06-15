@@ -25,8 +25,8 @@ This is a web application that displays an interactive map using [Leaflet](https
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-username/your-repo-name.git
-   cd your-repo-name
+   git clone https://github.com/IshtiaqIslamHimel/GeoLocation-Fact-Checker.git
+   cd GeoLocation-Fact-Checker
    ```
 
 2. **Install Dependencies**:
